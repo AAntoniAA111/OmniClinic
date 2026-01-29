@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniClinic AI - Transformando a Gestão da Saúde</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #000000;
+            --secondary: #ffffff;
+            --accent: #333333;
+            --gray-dark: #1a1a1a;
+            --gray-medium: #666666;
+            --gray-light: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Cursor customizado */
+        body {
+            cursor: none;
+        }
+
+        #cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        #cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            mix-blend-mode: difference;
+        }
+
+        /* Navegação fixa */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 20px 60px;
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .logo-nav {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 50px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #ffffff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            padding: 12px 30px;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .nav-cta:hover {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: inset 0 0 0 2px #ffffff;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+        }
+
+        .hero-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100px 100px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 1200px;
+            padding: 0 40px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 7rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ffffff 0%, #666666 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #aaaaaa;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            line-height: 1.8;
+            font-weight: 300;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 18px 45px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-primary:hover {
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ffffff, transparent);
+            margin: 0 auto;
+        }
+
+        /* Seção Problemas */
+        .problems-section {
+            padding: 150px 60px;
+            background: #0f0f0f;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #888888;
+            font-size: 1.2rem;
+            margin-bottom: 80px;
+            font-weight: 300;
+        }
+
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .problem-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(to bottom, #ffffff, #666666);
+            transition: height 0.5s ease;
+        }
+
+        .problem-card:hover::before {
+            height: 100%;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .problem-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            line-height: 1;
+        }
+
+        .problem-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .problem-card p {
+            color: #aaaaaa;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Seção Solução */
+        .solution-section {
+            padding: 150px 60px;
+            background: #000000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-hero {
+            max-width: 1200px;
+            margin: 0 auto 100px;
+            text-align: center;
+        }
+
+        .solution-hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.1;
+        }
+
+        .solution-hero p {
+            font-size: 1.5rem;
+            color: #aaaaaa;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .features-showcase {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            gap: 60px;
+        }
+
+        .feature-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            padding: 60px 0;
+        }
+
+        .feature-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .feature-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .feature-visual {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            padding: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .feature-icon {
+            font-size: 8rem;
+            opacity: 0.1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+        }
+
+        .feature-content p {
+            color: #aaaaaa;
+            line-height: 1.9;
+            font-size: 1.15rem;
+            margin-bottom: 30px;
+        }
+
+        .feature-tags {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Seção Público-Alvo */
+        .target-section {
+            padding: 150px 60px;
+            background: #0f0f0f;
+        }
+
+        .target-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .target-card {
+            background: #1a1a1a;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .target-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
+            transition: height 0.5s ease;
+        }
+
+        .target-card:hover::after {
+            height: 100%;
+        }
+
+        .target-card:hover {
+            transform: translateY(-15px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .target-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .target-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .target-card p {
+            color: #aaaaaa;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Seção Diferenciais */
+        .differentials-section {
+            padding: 150px 60px;
+            background: #000000;
+            position: relative;
+        }
+
+        .differentials-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+
+        .differentials-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .differential-item {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+            padding: 80px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .differential-item:last-child {
+            border-bottom: none;
+        }
+
+        .differential-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #ffffff 0%, #333333 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .differential-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .differential-content p {
+            color: #aaaaaa;
+            font-size: 1.2rem;
+            line-height: 1.9;
+        }
+
+        /* Seção Planos */
+        .pricing-section {
+            padding: 150px 60px;
+            background: linear-gradient(135deg, #0f0f0f 0%, #000000 100%);
+        }
+
+        .pricing-grid {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+        }
+
+        .pricing-card {
+            background: #1a1a1a;
+            padding: 70px 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #666666, #999999);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .pricing-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .pricing-card.featured {
+            background: linear-gradient(135deg, #1f1f1f 0%, #1a1a1a 100%);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            background: linear-gradient(90deg, #ffffff, #666666);
+            transform: scaleX(1);
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #ffffff;
+            color: #000000;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .pricing-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .pricing-amount {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 40px;
+        }
+
+        .pricing-amount .currency {
+            font-size: 2rem;
+            color: #666666;
+            margin-right: 5px;
+        }
+
+        .pricing-amount .price {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .pricing-amount .period {
+            font-size: 1.2rem;
+            color: #666666;
+            margin-left: 10px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .pricing-features li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #aaaaaa;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            padding: 20px;
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-cta:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .pricing-card.featured .pricing-cta {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .pricing-card.featured .pricing-cta:hover {
+            background: transparent;
+            color: #ffffff;
+        }
+
+        .setup-info {
+            max-width: 1000px;
+            margin: 80px auto 0;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #666666;
+        }
+
+        .setup-info h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .setup-info p {
+            color: #aaaaaa;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Seção Investimento */
+        .investment-section {
+            padding: 150px 60px;
+            background: #000000;
+        }
+
+        .investment-grid {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .investment-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        .investment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), transparent);
+            transition: width 0.5s ease;
+        }
+
+        .investment-card:hover::before {
+            width: 100%;
+        }
+
+        .investment-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .investment-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .investment-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .investment-card p {
+            color: #aaaaaa;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Seção Viabilidade */
+        .viability-section {
+            padding: 150px 60px;
+            background: #0f0f0f;
+        }
+
+        .viability-hero {
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .viability-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+            padding: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .viability-content p {
+            font-size: 1.3rem;
+            line-height: 2;
+            color: #cccccc;
+            margin-bottom: 30px;
+        }
+
+        .viability-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            color: #888888;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Seção Time */
+        .team-section {
+            padding: 150px 60px;
+            background: #000000;
+        }
+
+        .team-grid {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 50px 40px;
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), transparent);
+            transition: top 0.5s ease;
+        }
+
+        .team-member:hover::before {
+            top: 0;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .team-member h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .team-member p {
+            color: #888888;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* CTA Final */
+        .cta-section {
+            padding: 150px 60px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .cta-content p {
+            font-size: 1.4rem;
+            color: #aaaaaa;
+            margin-bottom: 50px;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 60px 40px;
+            background: #000000;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .footer-description {
+            color: #666666;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .footer-links h4 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links ul li a {
+            color: #666666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links ul li a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 5rem;
+            }
+
+            .section-title {
+                font-size: 3rem;
+            }
+
+            .problems-grid,
+            .target-grid,
+            .pricing-grid,
+            .investment-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-item {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px 30px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .viability-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cursor customizado -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- Navegação -->
+    <nav id="navbar">
+        <div class="logo-nav">OMNICLINIC AI</div>
+        <ul class="nav-links">
+            <li><a href="#solucao">Solução</a></li>
+            <li><a href="#diferenciais">Diferenciais</a></li>
+            <li><a href="#planos">Planos</a></li>
+            <li><a href="#time">Time</a></li>
+        </ul>
+        <button class="nav-cta" onclick="document.getElementById('contato').scrollIntoView({behavior: 'smooth'})">Começar Agora</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-content">
+            <span class="hero-badge">VitalTech Sistemas Inteligentes</span>
+            <h1>OmniClinic AI</h1>
+            <p class="hero-subtitle">Transformar a gestão da saúde através da tecnologia inteligente, conectando médicos e pacientes de forma ágil, segura e sem burocracia.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="document.getElementById('planos').scrollIntoView({behavior: 'smooth'})">Ver Planos</button>
+                <button class="btn-secondary" onclick="document.getElementById('solucao').scrollIntoView({behavior: 'smooth'})">Saiba Mais</button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- Seção Problemas -->
+    <section class="problems-section">
+        <h2 class="section-title">Problemas que Resolvemos</h2>
+        <p class="section-subtitle">Identificamos as principais dores do mercado de saúde</p>
+        <div class="problems-grid">
+            <div class="problem-card">
+                <span class="problem-number">01</span>
+                <h3>Absenteísmo Crítico</h3>
+                <p>Altas taxas de faltas em consultas por falta de lembretes eficazes, gerando prejuízos financeiros e desperdício de tempo valioso para clínicas e profissionais.</p>
+            </div>
+            <div class="problem-card">
+                <span class="problem-number">02</span>
+                <h3>Burocracia Excessiva</h3>
+                <p>Profissionais de saúde gastam mais tempo preenchendo formulários e prontuários do que efetivamente atendendo pacientes, reduzindo a qualidade do atendimento.</p>
+            </div>
+            <div class="problem-card">
+                <span class="problem-number">03</span>
+                <h3>Acesso Limitado</h3>
+                <p>Pacientes encontram barreiras significativas para agendar consultas fora do horário comercial ou para acessar seus próprios históricos médicos e exames.</p>
+            </div>
+            <div class="problem-card">
+                <span class="problem-number">04</span>
+                <h3>Sistemas Fragmentados</h3>
+                <p>Falta de integração entre sistemas de telemedicina e prontuários físicos, criando retrabalho, perda de informações e ineficiência operacional.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Solução -->
+    <section class="solution-section" id="solucao">
+        <div class="solution-hero">
+            <h2>Nossa Solução</h2>
+            <p>Uma plataforma integrada de gestão clínica que utiliza Inteligência Artificial para aprimorar todo o fluxo de atendimento.</p>
+        </div>
+        <div class="features-showcase">
+            <div class="feature-item">
+                <div class="feature-visual">
+                    <span class="feature-icon">🔄</span>
+                </div>
+                <div class="feature-content">
+                    <h3>Reagenda Inteligente</h3>
+                    <p>Sistema automatizado que identifica desistências e reagenda consultas via WhatsApp e SMS, reduzindo drasticamente o absenteísmo e otimizando a ocupação da agenda.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Automação</span>
+                        <span class="feature-tag">WhatsApp</span>
+                        <span class="feature-tag">SMS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-visual">
+                    <span class="feature-icon">📅</span>
+                </div>
+                <div class="feature-content">
+                    <h3>Agendamento Inteligente</h3>
+                    <p>Self-service completo para pacientes com visualização em tempo real de horários disponíveis. Sistema de gestão avançado com agenda organizada por cores, alertas de conflitos e sincronização automática.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Self-Service</span>
+                        <span class="feature-tag">Tempo Real</span>
+                        <span class="feature-tag">Sincronização</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-visual">
+                    <span class="feature-icon">🎙️</span>
+                </div>
+                <div class="feature-content">
+                    <h3>Prontuário com Comando de Voz</h3>
+                    <p>Transcrição em tempo real de consultas para o sistema eletrônico. O médico dita e as informações aparecem instantaneamente, economizando tempo precioso e melhorando a experiência do atendimento.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">IA</span>
+                        <span class="feature-tag">Voz</span>
+                        <span class="feature-tag">Tempo Real</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-visual">
+                    <span class="feature-icon">📹</span>
+                </div>
+                <div class="feature-content">
+                    <h3>Teleatendimento Integrado</h3>
+                    <p>Videoconferência criptografada de ponta a ponta, integrada diretamente ao prontuário eletrônico. Segurança máxima com conformidade total com LGPD e normas de telemedicina.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Criptografia</span>
+                        <span class="feature-tag">LGPD</span>
+                        <span class="feature-tag">Integrado</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-visual">
+                    <span class="feature-icon">📁</span>
+                </div>
+                <div class="feature-content">
+                    <h3>Repositório de Exames</h3>
+                    <p>Espaço em nuvem seguro para upload, armazenamento e visualização organizada de exames. Acesso rápido ao histórico completo do paciente em qualquer lugar, a qualquer momento.</p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Nuvem</span>
+                        <span class="feature-tag">Seguro</span>
+                        <span class="feature-tag">Organizado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Público-Alvo -->
+    <section class="target-section">
+        <h2 class="section-title">Para Quem é o OmniClinic AI</h2>
+        <p class="section-subtitle">Desenvolvido especialmente para profissionais e instituições de saúde</p>
+        <div class="target-grid">
+            <div class="target-card">
+                <span class="target-icon">🏥</span>
+                <h3>Clínicas</h3>
+                <p>Clínicas médicas e odontológicas de pequeno e médio porte que buscam eficiência operacional, redução de custos e modernização tecnológica.</p>
+            </div>
+            <div class="target-card">
+                <span class="target-icon">👨‍⚕️</span>
+                <h3>Profissionais Liberais</h3>
+                <p>Médicos, psicólogos, fisioterapeutas e nutricionistas que atuam em consultórios próprios e desejam uma gestão mais profissional.</p>
+            </div>
+            <div class="target-card">
+                <span class="target-icon">🔬</span>
+                <h3>Centros de Exames</h3>
+                <p>Laboratórios e centros diagnósticos que buscam integrar a entrega de resultados com o sistema do médico solicitante de forma automatizada.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Diferenciais -->
+    <section class="differentials-section" id="diferenciais">
+        <h2 class="section-title">Nossos Diferenciais</h2>
+        <p class="section-subtitle">O que nos torna únicos no mercado</p>
+        <div class="differentials-content">
+            <div class="differential-item">
+                <div class="differential-number">01</div>
+                <div class="differential-content">
+                    <h3>Interface Minimalista</h3>
+                    <p>Redução significativa de cliques necessários para finalizar um atendimento. Nossa interface foi desenhada pensando em eficiência máxima, permitindo que médicos concluam tarefas em até 70% menos tempo comparado aos concorrentes.</p>
+                </div>
+            </div>
+            <div class="differential-item">
+                <div class="differential-number">02</div>
+                <div class="differential-content">
+                    <h3>Tecnologia Acessível</h3>
+                    <p>Inteligência Artificial de ponta com preços justos e acessíveis para profissionais que estão começando. Democratizamos o acesso à tecnologia de ponta sem comprometer a qualidade ou a segurança.</p>
+                </div>
+            </div>
+            <div class="differential-item">
+                <div class="differential-number">03</div>
+                <div class="differential-content">
+                    <h3>Transcrição em Tempo Real</h3>
+                    <p>Sistema de reconhecimento de voz médica com precisão superior a 95%. As palavras aparecem instantaneamente na tela conforme o médico dita, com vocabulário especializado e aprendizado contínuo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Planos -->
+    <section class="pricing-section" id="planos">
+        <h2 class="section-title">Planos e Preços</h2>
+        <p class="section-subtitle">Escolha o plano ideal para sua prática médica</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Essencial</h3>
+                <div class="pricing-amount">
+                    <span class="currency">R$</span>
+                    <span class="price">149</span>
+                    <span class="period">/mês</span>
+                </div>
+                <ul class="pricing-features">
+                    <li>1 usuário</li>
+                    <li>Agendamento inteligente</li>
+                    <li>Prontuário eletrônico básico</li>
+                    <li>Repositório de exames (5GB)</li>
+                    <li>Reagenda automática</li>
+                    <li>Suporte via e-mail</li>
+                    <li>Atualizações incluídas</li>
+                </ul>
+                <button class="pricing-cta">Começar Agora</button>
+            </div>
+            <div class="pricing-card featured">
+                <span class="pricing-badge">Mais Popular</span>
+                <h3>Business</h3>
+                <div class="pricing-amount">
+                    <span class="currency">R$</span>
+                    <span class="price">399</span>
+                    <span class="period">/mês</span>
+                </div>
+                <ul class="pricing-features">
+                    <li>Usuários ilimitados</li>
+                    <li>Todas as funcionalidades do Essencial</li>
+                    <li>Módulo de telemedicina completo</li>
+                    <li>Prontuário com comando de voz</li>
+                    <li>Repositório ilimitado</li>
+                    <li>Relatórios e analytics avançados</li>
+                    <li>Suporte prioritário 24/7</li>
+                    <li>Treinamento personalizado</li>
+                </ul>
+                <button class="pricing-cta">Começar Agora</button>
+            </div>
+        </div>
+        <div class="setup-info">
+            <h4>Taxa de Setup e Customização</h4>
+            <p>Oferecemos um serviço completo de migração de dados de sistemas antigos e treinamento personalizado para toda a equipe. O valor é único e calculado de acordo com o volume de dados e necessidades específicas da sua clínica. Entre em contato para receber um orçamento personalizado sem compromisso.</p>
+        </div>
+    </section>
+
+    <!-- Seção Investimento -->
+    <section class="investment-section">
+        <h2 class="section-title">Estrutura de Investimento</h2>
+        <p class="section-subtitle">Como construímos uma solução de classe mundial</p>
+        <div class="investment-grid">
+            <div class="investment-card">
+                <span class="investment-icon">💻</span>
+                <h3>Desenvolvimento</h3>
+                <p>Equipe multidisciplinar especializada composta por desenvolvedores de Cybersegurança, Front-end, Back-end e Especialistas em IA, garantindo qualidade, segurança e inovação contínua.</p>
+            </div>
+            <div class="investment-card">
+                <span class="investment-icon">☁️</span>
+                <h3>Infraestrutura</h3>
+                <p>Servidores em nuvem de última geração (AWS ou Azure) com alta disponibilidade, redundância geográfica e conformidade total com LGPD para proteção máxima de dados sensíveis.</p>
+            </div>
+            <div class="investment-card">
+                <span class="investment-icon">📢</span>
+                <h3>Marketing</h3>
+                <p>Estratégias de marketing digital focadas em resultados, com campanhas de tráfego pago no Google Ads e LinkedIn direcionadas especificamente para gestores de saúde e tomadores de decisão.</p>
+            </div>
+            <div class="investment-card">
+                <span class="investment-icon">🛠️</span>
+                <h3>Suporte</h3>
+                <p>Equipe dedicada de Customer Success para onboarding, treinamento contínuo, suporte técnico, correção proativa de bugs e desenvolvimento de melhorias baseadas em feedback real.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Viabilidade -->
+    <section class="viability-section">
+        <div class="viability-hero">
+            <h2 class="section-title">Por Que Somos Viáveis</h2>
+            <p class="section-subtitle">Fundamentação estratégica e de mercado</p>
+        </div>
+        <div class="viability-content">
+            <p>O negócio é altamente viável devido à transformação digital acelerada e irreversível no setor de saúde brasileiro. A telemedicina deixou de ser uma tendência para se tornar um padrão estabelecido, e a busca por eficiência operacional não é mais um luxo, mas uma necessidade crítica de sobrevivência para clínicas de todos os portes.</p>
+            <p>Além disso, a conformidade rigorosa com a LGPD (Lei Geral de Proteção de Dados) cria uma barreira de entrada significativa para sistemas obsoletos e desatualizados, abrindo uma janela de oportunidade estratégica para soluções modernas, seguras e compliance como o OmniClinic AI.</p>
+        </div>
+        <div class="viability-stats">
+            <div class="stat-card">
+                <h4>Mercado em Expansão</h4>
+                <p>Crescimento exponencial da telemedicina e digitalização de clínicas no Brasil pós-pandemia</p>
+            </div>
+            <div class="stat-card">
+                <h4>Conformidade LGPD</h4>
+                <p>Barreira natural de entrada para concorrentes obsoletos e não conformes</p>
+            </div>
+            <div class="stat-card">
+                <h4>Necessidade Real</h4>
+                <p>Eficiência operacional é essencial para sobrevivência e competitividade das clínicas</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Time -->
+    <section class="team-section" id="time">
+        <h2 class="section-title">Nosso Time</h2>
+        <p class="section-subtitle">A equipe por trás da inovação</p>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-avatar">AQ</div>
+                <h3>Antônia Quintino</h3>
+                <p>Co-Fundadora</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">VC</div>
+                <h3>Vitória Costa</h3>
+                <p>Co-Fundadora</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">TR</div>
+                <h3>Thales Rodrigues</h3>
+                <p>Co-Fundador</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-section" id="contato">
+        <div class="cta-content">
+            <h2>Pronto para Transformar sua Clínica?</h2>
+            <p>Junte-se a centenas de profissionais de saúde que já confiam no OmniClinic AI para revolucionar sua gestão clínica.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary">Agendar Demonstração</button>
+                <button class="btn-secondary">Falar com Consultor</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-brand">OmniClinic AI</div>
+                <p class="footer-description">Transformando a gestão da saúde através da tecnologia inteligente. Uma solução da VitalTech Sistemas Inteligentes.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Produto</h4>
+                <ul>
+                    <li><a href="#solucao">Funcionalidades</a></li>
+                    <li><a href="#planos">Planos</a></li>
+                    <li><a href="#">Integrações</a></li>
+                    <li><a href="#">Segurança</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Empresa</h4>
+                <ul>
+                    <li><a href="#time">Sobre Nós</a></li>
+                    <li><a href="#">Carreiras</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacidade</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="#">LGPD</a></li>
+                    <li><a href="#">Compliance</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 VitalTech Sistemas Inteligentes. Todos os direitos reservados.</p>
+            <p>Desenvolvido com tecnologia e paixão</p>
+        </div>
+    </footer>
+
+    <script>
+        // Cursor customizado
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Animações ao scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Aplicar animações aos cards
+        document.querySelectorAll('.problem-card, .target-card, .pricing-card, .investment-card, .team-member').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Efeito de hover nos botões
+        document.querySelectorAll('.btn-primary, .btn-secondary, .pricing-cta, .nav-cta').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                cursor.style.width = '40px';
+                cursor.style.height = '40px';
+            });
+            btn.addEventListener('mouseleave', () => {
+                cursor.style.width = '20px';
+                cursor.style.height = '20px';
+            });
+        });
+    </script>
+</body>
+</html>
